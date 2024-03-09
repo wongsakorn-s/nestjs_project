@@ -14,7 +14,6 @@ export class ProductController {
         return this.productService.getProducts(category, minPrice, maxPrice, sort);
     }
 
-    @Public()
     @Post()
     public async postProduct(@Body() productDto: Omit<ProductDTO, 'id'>) {
         if (!productDto.name || productDto.price == null || !productDto.category) {
@@ -29,13 +28,11 @@ export class ProductController {
         return this.productService.getProductById(id);
     }
 
-    @Public()
     @Delete(':id')
     public async deleteProductById(@Param('id') id: number) {
         return this.productService.deleteProductById(id);
     }
 
-    @Public()
     @Put(':id')
     public async putProductById(@Param('id') id: number, @Query() query) {
         const propertyName = query.property_name;
