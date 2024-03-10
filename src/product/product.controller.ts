@@ -2,7 +2,9 @@ import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Query }
 import { ProductService } from './product.service';
 import { ProductDTO } from './dto/product.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('product')
 @Controller('product')
 export class ProductController {
     constructor(private productService: ProductService) { }
