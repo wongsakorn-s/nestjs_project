@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -17,7 +17,19 @@ export class AuthService {
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.userId, username: user.username };
+    const payload = { username: user.username, sub: user.userId, role: user.role };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+  }
+
+  async register(username: string, password: string): Promise<{ access_token: string }> {
+    const existingUser = await this.usersService.findOne(username);
+    if (existingUser) {
+      throw new ConflictException('Username already taken');
+    }
+    const newUser = await this.usersService.create(username, password);
+    const payload = { sub: newUser.userId, username: newUser.username };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
